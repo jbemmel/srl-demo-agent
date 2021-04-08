@@ -1,0 +1,62 @@
+module demo_fib_agent {
+
+    yang-version "1";
+
+    // namespace
+    namespace "urn:srl_test/demo-fib-agent";
+
+    prefix "demo_fib_agent";
+
+    revision "2021-04-08" {
+        description "Initial revision";
+        reference "TBD";
+    }
+
+
+    grouping demo-fib-agent-top {
+        description "Top level grouping for demo_fib_agent sample app";
+
+        container demo-fib-agent {
+            presence "presence container";
+            description "Top level enclosing container for demo_fib_agent sample app 
+                         config and operational state data";
+
+            leaf input-fib {
+                description "Absolute path to route description file (JSON)";
+                type string;
+                }
+            leaf action {
+                description "add or delete or replace";
+                type string { 
+                 pattern 'add|delete|replace';
+                }
+            list fib-result {
+                key name;
+                config false;
+
+            leaf name {
+                 type string;
+                }
+            leaf programmed-state {
+                type boolean;
+                description "Programmed state of fib routes";
+                }
+            leaf reason-code {
+                type string;
+                description "Reason for unprogrammed fib";
+                }
+            }
+            leaf route-count {
+                type uint64;
+                config false;
+            }
+            leaf programmed-routes {
+                type uint64;
+                config false;
+            }
+        }
+    }
+
+    // data definition statements
+    uses demo-fib-agent-top;
+}
