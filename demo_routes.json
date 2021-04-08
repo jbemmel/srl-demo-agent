@@ -1,0 +1,35 @@
+{
+  "delete": {
+    "ip_table": [],
+    "mpls_table": [],
+    "nh_groups": []
+  },
+  "fib": {
+    "ip_table": [
+    ],
+    "mpls_table": [
+      {
+        "action": "swap",
+        "ingress_label": [
+          5000
+        ],
+        "nexthop_group_name": "direct_sdk"
+      }
+    ],
+    "nh_groups": [
+      {
+        "entry": [
+          {
+            "egress_label": [
+              3
+            ],
+            "ip_nexthop": "1.1.1.2",
+            "type": "direct"
+          }
+        ],
+        "name": "direct_sdk",
+        "network_instance": "vrf1"
+      }
+    ]
+  }
+}
