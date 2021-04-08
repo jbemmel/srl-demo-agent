@@ -28,12 +28,12 @@
             "egress_label": [
               3
             ],
-            "ip_nexthop": "1.1.1.2",
+            "ip_nexthop": "1.2.3.4",
             "type": "direct"
           }
         ],
         "name": "direct_sdk",
-        "network_instance": "vrf1"
+        "network_instance": "mgmt"
       }
     ]
   }
