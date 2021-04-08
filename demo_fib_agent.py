@@ -457,7 +457,7 @@ def Handle_Notification(obj, file_name, app_id, route_count):
                     logging.info(f"Got input-fib :: {data['input_fib']['value']}")
                     #if action is not set in cli, default it to 'add'
                     if 'action' in data:
-                        action = data['action']['value']
+                        action = data['action']['value'][7:] # skip "ACTION_xxx"
                     else:
                         action = 'add'
                     logging.info(f"Action received is : {action}")
