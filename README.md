@@ -9,8 +9,10 @@ One way is to install 'git' on SRLinux, then check out the sources:
 - Restart appmgr (in SRLinux): `tools system app-management application app_mgr reload`
 
 ## Configuration
-`enter candidate
+```
+enter candidate
 demo-fib-agent
 input-fib /etc/opt/srlinux/appmgr/demo_routes.json
 action add
-commit now`
+commit now
+```
