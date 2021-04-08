@@ -27,8 +27,7 @@ module demo_fib_agent {
                 }
             leaf action {
                 description "add or delete or replace";
-                type string { 
-                 pattern 'add|delete|replace';
+                type string { pattern 'add|delete|replace'; }
                 }
             list fib-result {
                 key name;
