@@ -6,6 +6,11 @@
   },
   "fib": {
     "ip_table": [
+      {
+        "network_instance": "mgmt",
+        "nexthop_group_name": "direct_sdk",
+        "prefix": "150.1.1.0/24"
+      }
     ],
     "mpls_table": [
       {
