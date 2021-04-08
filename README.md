@@ -1,6 +1,10 @@
 # srl-demo-agent
 A sample custom Python agent running in SRLinux
 
+This simple example demo agent
+1. Registers a custom YAML model for CLI based configuration (path to a .json file with routes)
+2. Upon configuration, reads the routes from the .json file and programs them into the datapath
+
 ## Installation
 One way is to install 'git' on SRLinux, then check out the sources:
 - Edit /etc/resolv.conf to add reachable nameservers, if needed
