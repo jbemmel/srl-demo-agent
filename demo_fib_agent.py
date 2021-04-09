@@ -556,7 +556,10 @@ def Run():
                     file_name, route_count = Handle_Notification(obj, file_name, app_id, route_count)
     except grpc._channel._Rendezvous as err:
         logging.info('GOING TO EXIT NOW, DOING FINAL git pull: {}'.format(err))
-        subprocess.Popen(['git','pull'], cwd='/etc/opt/srlinux/appmgr')
+        process = subprocess.Popen(['git','pull'], cwd='/etc/opt/srlinux/appmgr',
+                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdoutput, stderroutput = process.communicate()
+        logging.info('git pull result: {}'.format(stdoutput))
     except Exception as e:
         logging.error('Exception caught :: {}'.format(e))
         if file_name != None:
