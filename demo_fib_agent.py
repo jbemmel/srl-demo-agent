@@ -612,5 +612,5 @@ if __name__ == '__main__':
     if Run():
         logging.info('Agent unregistered and agent routes withdrawed from dut')
     else:
-        logging.info(f'Some exception caught, Check !')
+        logging.info('Should not happen')
 
