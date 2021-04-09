@@ -560,9 +560,9 @@ def Run():
            git_pull = subprocess.Popen(['/usr/bin/git','pull'], cwd='/etc/opt/srlinux/appmgr',
                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            stdoutput, stderroutput = git_pull.communicate()
-           logging.info('git pull result: {} err={}'.format(stdoutput,stderroutput))
+           logging.info(f'git pull result: {stdoutput} err={stderroutput}')
         except Exception as e:
-           logging.error('Exception caught in git pull :: {}'.format(e))
+           logging.error(f'Exception caught in git pull :: {e}')
 
     except Exception as e:
         logging.error('Exception caught :: {}'.format(e))
