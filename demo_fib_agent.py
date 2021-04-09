@@ -10,6 +10,7 @@ import os
 import ipaddress
 import json
 import signal
+import subprocess # JvB for git pull call
 
 import sdk_service_pb2
 import sdk_service_pb2_grpc
@@ -554,7 +555,8 @@ def Run():
                 else:
                     file_name, route_count = Handle_Notification(obj, file_name, app_id, route_count)
     except grpc._channel._Rendezvous as err:
-        logging.info('GOING TO EXIT NOW: {}'.format(err))
+        logging.info('GOING TO EXIT NOW, DOING FINAL git pull: {}'.format(err))
+        subprocess.Popen(['git','pull'], cwd='/etc/opt/srlinux/appmgr')
     except Exception as e:
         logging.error('Exception caught :: {}'.format(e))
         if file_name != None:
