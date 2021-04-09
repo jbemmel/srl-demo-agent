@@ -1,0 +1,7 @@
+#!/bin/sh
+# To enable this hook, move this file to ".git/hooks/pre-commit".
+
+BUILDNO=`git log --pretty=oneline | wc -l`
+DATE=`date +%Y%m%d_%H%M`
+echo "$DATE-$BUILDNO" > build_version
+git add build_version
