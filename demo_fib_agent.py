@@ -557,8 +557,10 @@ def Run():
     except grpc._channel._Rendezvous as err:
         logging.info('GOING TO EXIT NOW, DOING FINAL git pull: {}'.format(err))
         try:
-           git_pull = subprocess.Popen(['/usr/bin/git','pull'], cwd='/etc/opt/srlinux/appmgr',
-                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+           # Need to execute this in the mgmt network namespace
+           git_pull = subprocess.Popen(['/usr/sbin/ip','netns','exec','srbase-mgmt','/usr/bin/git','pull'], 
+                                       cwd='/etc/opt/srlinux/appmgr',
+                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            stdoutput, stderroutput = git_pull.communicate()
            logging.info(f'git pull result: {stdoutput} err={stderroutput}')
         except Exception as e:
