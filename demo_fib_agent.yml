@@ -6,6 +6,8 @@ demo_fib_agent:
    wait-for-config: Yes
    failure-threshold: 100
    failure-action: wait=forever
+   author: 'Nokia'
+   version-command: 'cat build_version'
    yang-modules:
        names: 
            - "demo_fib_agent"
