@@ -516,8 +516,8 @@ def get_app_id(app_name):
 
 ##################################################################################################
 ## This is the main proc where all processing for fib_agent starts.
-## Agent registeration, notification registration, Subscrition to notifications.
-## Waits on the sunscribed Notifications and once any config is received, handles that config
+## Agent registration, notification registration, Subscrition to notifications.
+## Waits on the subscribed Notifications and once any config is received, handles that config
 ## If there are critical errors, Unregisters the fib_agent gracefully.
 ##################################################################################################
 def Run():
@@ -526,7 +526,6 @@ def Run():
     response = stub.AgentRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
     logging.info(f"Registration response : {response.status}")
     
-    app_id = get_app_id(agent_name)
     app_id = get_app_id(agent_name)
     if not app_id:
         logging.error(f'idb does not have the appId for {agent_name} : {app_id}')
@@ -557,7 +556,7 @@ def Run():
     except grpc._channel._Rendezvous as err:
         logging.info('GOING TO EXIT NOW, DOING FINAL git pull: {}'.format(err))
         try:
-           # Need to execute this in the mgmt network namespace
+           # Need to execute this in the mgmt network namespace, hardcoded name for now
            git_pull = subprocess.Popen(['/usr/sbin/ip','netns','exec','srbase-mgmt','/usr/bin/git','pull'], 
                                        cwd='/etc/opt/srlinux/appmgr',
                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
