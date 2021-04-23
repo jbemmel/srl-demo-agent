@@ -15,7 +15,9 @@ Specifically:
 
 ## NetOps cycle enhancements
 
-In addition to a sample Python agent, this repo contains some ideas and tricks to speed up development.
+In addition to a sample Python agent, this repo contains some ideas and tricks to speed up development / iteration cycles:
+* Trigger a 'git pull' upon agent restart, such that the latest version gets installed
+* Use a Git hook to update a version number string, so you can easily see what is deployed
 
 ## Installation
 One way is to install 'git' on SRLinux, then check out the sources:
