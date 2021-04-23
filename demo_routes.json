@@ -1,7 +1,6 @@
 {
   "delete": {
     "ip_table": [],
-    "mpls_table": [],
     "nh_groups": []
   },
   "fib": {
