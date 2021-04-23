@@ -15,9 +15,6 @@
       {
         "entry": [
           {
-            "egress_label": [
-              3
-            ],
             "ip_nexthop": "1.2.3.4",
             "type": "direct"
           }
