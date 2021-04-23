@@ -1,9 +1,17 @@
 # srl-demo-agent
-A sample custom Python agent running in SRLinux
+A sample custom Python agent running in SR Linux
 
 This simple example demo agent
 1. Registers a custom YAML model for CLI based configuration (path to a .json file with routes)
 2. Upon configuration, reads the routes from the .json file and programs them into the datapath
+
+The intent is to illustrate the components required to deploy a custom agent on SRL; this can be used as the basis for your own development.
+Specifically:
+1. demo_fib_agent.py contains the Python code for the agent (single file)
+2. demo_fib_agent.sh is a shell script to launch the Python agent, triggered from the .yml file
+3. demo_fib_agent.yang is a YANG model for the configuration and state information provided by the Python agent
+4. demo_fib_agent.yml is a YAML file that tells SRL where to find the custom agent to be loaded
+5. demo_routes.json is an agent specific sample input file (least important)
 
 ## NetOps cycle enhancements
 
