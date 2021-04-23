@@ -190,13 +190,13 @@ def Handle_Nexthop_Group_Add_Request(action, fib, res):
             if nh_type == 'indirect':
                 nh.resolve_to = nexthop_group_service_pb2.NextHop.INDIRECT
             
-            if 'egress_label' in entry:
-                for lbl in entry['egress_label']:
-                    label = nh.mpls_nexthop.label_stack.add()
-                    label.mpls_label = int(lbl)
-                nh.mpls_nexthop.ip_nexthop.addr = ip.packed
-            else:
-                nh.ip_nexthop.addr = ip.packed
+            #if 'egress_label' in entry:
+            #    for lbl in entry['egress_label']:
+            #        label = nh.mpls_nexthop.label_stack.add()
+            #        label.mpls_label = int(lbl)
+            #    nh.mpls_nexthop.ip_nexthop.addr = ip.packed
+            #else:
+            nh.ip_nexthop.addr = ip.packed
 
     logging.info(f"NH_REQUEST :: {nh_request}")
     nhg_response = nhg_stub.NextHopGroupAddOrUpdate(request=nh_request,metadata=metadata)
@@ -307,63 +307,6 @@ def Handle_Route_Del_Request(fib, res):
     pushed_routes = pushed_routes - del_route_count
     return res
 
-############################################################
-## Process MPLS add or replace request
-## add/replace the given MPLS labels in the input fib
-## data is picked from fib['mpls']
-############################################################
-def Handle_Mpls_Add_Request(action, fib, res):
-    mpls_route_stub = mpls_service_pb2_grpc.SdkMgrMplsRouteServiceStub(channel)
-    if action =='replace':
-        mpls_route_stub.SyncStart(request=sdk_common_pb2.SyncRequest(),metadata=metadata)
-    mpls_route_request = mpls_service_pb2.MplsRouteAddRequest()
-    for mpls in fib['mpls_table']:
-        mpls_route_info = mpls_route_request.routes.add()
-        if 'preference' in mpls:
-            mpls_route_info.data.preference = mpls['preference']
-        if 'action' in mpls:
-            if mpls['action'] == 'swap':
-                mpls_route_info.data.operation = mpls_service_pb2.MplsRoutePb.SWAP
-                for label in mpls['ingress_label']:
-                    mpls_route_info.key.top_label.mpls_label = int(label)
-
-        mpls_route_info.data.nexthop_group_name = mpls['nexthop_group_name']
-    
-    logging.info(f"MPLS ROUTE REQUEST :: {mpls_route_request}")  
-    mpls_route_response = mpls_route_stub.MplsRouteAddOrUpdate(request=mpls_route_request,metadata=metadata)
-    logging.info(f"MPLS ROUTE RESPONSE:: {mpls_route_response}")
-    if mpls_route_response.status !=0:
-        res=False
-    logging.info(f"MPLS status:{mpls_route_response.status}")
-    
-    if action =='replace':
-        mpls_sync_response = mpls_route_stub.SyncEnd(request=sdk_common_pb2.SyncRequest(),metadata=metadata)
-        logging.info(mpls_sync_response)
-    
-    return res
-
-############################################################
-## Process MPLS delete request
-## delete the given MPLS labels in the input fib
-## data is picked from fib['mpls']
-############################################################
-def Handle_Mpls_Del_Request(fib, res):
-    mpls_route_stub = mpls_service_pb2_grpc.SdkMgrMplsRouteServiceStub(channel)
-    mpls_route_request = mpls_service_pb2.MplsRouteDeleteRequest()
-    for mpls in fib['mpls_table']:
-        mpls_route_info = mpls_route_request.routes.add()
-        for label in mpls['ingress_label']:
-            mpls_route_info.top_label.mpls_label = int(label)
-    
-    logging.info(f"MPLS DEL REQUEST :: {mpls_route_request}")
-    mpls_route_del_response = mpls_route_stub.MplsRouteDelete(request=mpls_route_request,metadata=metadata)
-    logging.info(f"MPLS DELETE RESPONSE:: {mpls_route_del_response}")
-    if mpls_route_del_response.status !=0:
-        res=False
-    logging.info(f"mpls status:{mpls_route_del_response.status}")
-    return res
-
-
 ##################################################################################################
 ## Program the routes that agent received in input-fib
 ## Update Success or Failure to the state output
@@ -413,14 +356,14 @@ def ProgramFibRoutes(input_fib=None, action='add'):
             res = Handle_Nexthop_Group_Add_Request(action, fib, res)
         if 'ip_table' in fib and fib['ip_table']:
             res = Handle_Route_Add_Request(action, fib, res)
-        if 'mpls_table' in fib and fib['mpls_table']:
-            res = Handle_Mpls_Add_Request(action, fib, res)
+        #if 'mpls_table' in fib and fib['mpls_table']:
+        #    res = Handle_Mpls_Add_Request(action, fib, res)
     ## Process delete of fib
     elif action == 'delete':
         if 'ip_table' in fib and fib['ip_table']:
             res = Handle_Route_Del_Request(fib, res)
-        if 'mpls_table' in fib and fib['mpls_table']: 
-            res = Handle_Mpls_Del_Request(fib, res)
+        #if 'mpls_table' in fib and fib['mpls_table']: 
+        #    res = Handle_Mpls_Del_Request(fib, res)
         if 'nh_groups' in fib and fib['nh_groups']:
             res = Handle_Nexthop_Group_Del_Request(fib, res)
 
