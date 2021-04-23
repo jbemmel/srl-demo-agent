@@ -12,15 +12,6 @@
         "prefix": "150.1.1.0/24"
       }
     ],
-    "mpls_table": [
-      {
-        "action": "swap",
-        "ingress_label": [
-          5000
-        ],
-        "nexthop_group_name": "direct_sdk"
-      }
-    ],
     "nh_groups": [
       {
         "entry": [
