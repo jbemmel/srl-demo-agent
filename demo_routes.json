@@ -8,7 +8,8 @@
       {
         "network_instance": "mgmt",
         "nexthop_group_name": "direct_sdk",
-        "prefix": "150.1.1.0/24"
+        "prefix": "150.1.1.0/24",
+	"metric": 123
       }
     ],
     "nh_groups": [

@@ -46,7 +46,7 @@ pushed_routes = 0
 
 ############################################################
 ## Subscribe to required event
-## This proc handles subscription of: Interface, LLDP, 
+## This proc handles subscription of: Interface, LLDP,
 ##                      Route, Network Instance, Config
 ############################################################
 def Subscribe(stream_id, option):
@@ -82,7 +82,7 @@ def Subscribe_Notifications(stream_id):
 
     ##Subscribe to Interface Notifications
     Subscribe(stream_id, 'intf')
-    
+
     ##Subscribe to Network-Instance Notifications
     Subscribe(stream_id, 'nw_inst')
 
@@ -97,8 +97,8 @@ def Subscribe_Notifications(stream_id):
 
 
 ############################################################
-## Function to populate state of agent config 
-## using telemetry -- add/update info from state 
+## Function to populate state of agent config
+## using telemetry -- add/update info from state
 ############################################################
 def Add_Telemetry(js_path, js_data ):
     telemetry_stub = telemetry_service_pb2_grpc.SdkMgrTelemetryServiceStub(channel)
@@ -111,7 +111,7 @@ def Add_Telemetry(js_path, js_data ):
     return telemetry_response
 
 ############################################################
-## Function to cleanup state of agent config 
+## Function to cleanup state of agent config
 ## using telemetry -- cleanup info from state
 ############################################################
 def Delete_Telemetry(js_path):
@@ -128,7 +128,7 @@ def Delete_Telemetry(js_path):
 ## It updates command: info from state fib-agent
 ############################################################
 def Update_Result(input_fib, result=True, reason=None, action='add'):
-    js_path = '.fib_agent.fib_result{.name=="' + input_fib + '"}'
+    js_path = '.demo_fib_agent.fib_result{.name=="' + input_fib + '"}'
     json_content='{"fib_result": '
     if action == 'add':
         for key in ['programmed-state', 'reason-code']:
@@ -150,7 +150,7 @@ def Update_Result(input_fib, result=True, reason=None, action='add'):
         return True
     else:
         assert False, "Got unrecognized action"
-    return True   
+    return True
 
 ############################################################
 ## Function to populate number of route count received by agent
@@ -165,7 +165,7 @@ def Update_Routes(programmed, actual=None):
     else:
         route_count = pushed_routes
     json_content = json_content + '"route_count": {"value": ' + str(route_count) + '}}'
-    
+
     Add_Telemetry(js_path=js_path, js_data=json_content)
     return True
 
@@ -189,7 +189,7 @@ def Handle_Nexthop_Group_Add_Request(action, fib, res):
             nh_type = entry.get('type', 'direct')
             if nh_type == 'indirect':
                 nh.resolve_to = nexthop_group_service_pb2.NextHop.INDIRECT
-            
+
             #if 'egress_label' in entry:
             #    for lbl in entry['egress_label']:
             #        label = nh.mpls_nexthop.label_stack.add()
@@ -209,7 +209,7 @@ def Handle_Nexthop_Group_Add_Request(action, fib, res):
     if action == 'replace':
         nhg_sync_response = nhg_stub.SyncEnd(request=sdk_common_pb2.SyncRequest(),metadata=metadata)
         logging.info(nhg_sync_response)
-    
+
     return res
 
 ############################################################
@@ -259,7 +259,7 @@ def Handle_Route_Add_Request(action, fib, res):
         route_info.key.ip_prefix.prefix_length = int(prefix[1])
         route_info.data.nexthop_group_name = ip['nexthop_group_name']
         route_count += 1
-    
+
     logging.info(f"ROUTE REQUEST :: {route_request}")
     route_response = route_stub.RouteAddOrUpdate(request=route_request,metadata=metadata)
     logging.info(f"ROUTE RESPONSE:: {route_response}")
@@ -268,12 +268,12 @@ def Handle_Route_Add_Request(action, fib, res):
     logging.info(f"Route status:{route_response.status}")
     logging.info(f"Route error:{route_response.error_str}")
     pushed_routes += route_count
-    
+
     if action =='replace':
         pushed_routes = route_count
         route_sync_response = route_stub.SyncEnd(request=sdk_common_pb2.SyncRequest(),metadata=metadata)
         logging.info(route_sync_response)
-    
+
     return res
 
 ############################################################
@@ -296,7 +296,7 @@ def Handle_Route_Del_Request(fib, res):
         if 'network_instance' in ip:
             route_info.net_inst_name = ip['network_instance']
         del_route_count += 1
-    
+
     logging.info(f"IP ROUTE DEL REQUEST :: {route_request}")
     route_del_response = route_stub.RouteDelete(request=route_request,metadata=metadata)
     logging.info(f"IP ROUTE DELETE RESPONSE:: {route_del_response}")
@@ -362,7 +362,7 @@ def ProgramFibRoutes(input_fib=None, action='add'):
     elif action == 'delete':
         if 'ip_table' in fib and fib['ip_table']:
             res = Handle_Route_Del_Request(fib, res)
-        #if 'mpls_table' in fib and fib['mpls_table']: 
+        #if 'mpls_table' in fib and fib['mpls_table']:
         #    res = Handle_Mpls_Del_Request(fib, res)
         if 'nh_groups' in fib and fib['nh_groups']:
             res = Handle_Nexthop_Group_Del_Request(fib, res)
@@ -372,7 +372,7 @@ def ProgramFibRoutes(input_fib=None, action='add'):
     return res
 
 ##################################################################
-## Proc to process the config Notifications received by fib_agent 
+## Proc to process the config Notifications received by fib_agent
 ## At present processing config from js_path = .fib-agent
 ##################################################################
 def Handle_Notification(obj, file_name, app_id, route_count):
@@ -380,7 +380,7 @@ def Handle_Notification(obj, file_name, app_id, route_count):
         logging.info(f"GOT CONFIG :: {obj.config.key.js_path}")
         logging.info(f"OLD FILE :: {file_name}")
         logging.info(f"Handle_Config with file_name as {file_name}")
-        if "fib_agent" in obj.config.key.js_path:
+        if "demo_fib_agent" in obj.config.key.js_path:
             logging.info(f"Got config for agent, now will handle it :: \n{obj.config}\
                             Operation :: {obj.config.op}\nData :: {obj.config.data.json}")
             if obj.config.op == 2:
@@ -468,7 +468,7 @@ def Run():
 
     response = stub.AgentRegister(request=sdk_service_pb2.AgentRegistrationRequest(), metadata=metadata)
     logging.info(f"Registration response : {response.status}")
-    
+
     app_id = get_app_id(agent_name)
     if not app_id:
         logging.error(f'idb does not have the appId for {agent_name} : {app_id}')
@@ -500,7 +500,7 @@ def Run():
         logging.info('GOING TO EXIT NOW, DOING FINAL git pull: {}'.format(err))
         try:
            # Need to execute this in the mgmt network namespace, hardcoded name for now
-           git_pull = subprocess.Popen(['/usr/sbin/ip','netns','exec','srbase-mgmt','/usr/bin/git','pull'], 
+           git_pull = subprocess.Popen(['/usr/sbin/ip','netns','exec','srbase-mgmt','/usr/bin/git','pull'],
                                        cwd='/etc/opt/srlinux/appmgr',
                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE)
            stdoutput, stderroutput = git_pull.communicate()
@@ -557,4 +557,3 @@ if __name__ == '__main__':
         logging.info('Agent unregistered and agent routes withdrawed from dut')
     else:
         logging.info('Should not happen')
-
